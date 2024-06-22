@@ -308,7 +308,7 @@ namespace SIPSorcery.SIP.App
                 logger.LogError("Exception CancelServerCall. " + excp.Message);
             }
         }
-        
+
         public void Hangup()
         {
             if (m_sipDialogue == null)
@@ -344,7 +344,7 @@ namespace SIPSorcery.SIP.App
             {
                 return;
             }
-            
+
             m_serverTransaction.AckAnswer(sipResponse, content, contentType);
             m_sipDialogue.SDP = content;
             m_sipDialogue.DialogueState = SIPDialogueStateEnum.Confirmed;
@@ -409,8 +409,8 @@ namespace SIPSorcery.SIP.App
                             m_serverAuthAttempts = 1;
 
                             // Resend INVITE with credentials.
-                            string username = (m_sipCallDescriptor.AuthUsername != null && m_sipCallDescriptor.AuthUsername.Trim().Length > 0) ? m_sipCallDescriptor.AuthUsername : m_sipCallDescriptor.Username;                            
-                            var authRequest = m_serverTransaction.TransactionRequest.DuplicateAndAuthenticate(sipResponse.Header.AuthenticationHeaders, 
+                            string username = (m_sipCallDescriptor.AuthUsername != null && m_sipCallDescriptor.AuthUsername.Trim().Length > 0) ? m_sipCallDescriptor.AuthUsername : m_sipCallDescriptor.Username;
+                            var authRequest = m_serverTransaction.TransactionRequest.DuplicateAndAuthenticate(sipResponse.Header.AuthenticationHeaders,
                                 username, m_sipCallDescriptor.Password);
 
                             // Create a new UAC transaction to establish the authenticated server call.
@@ -520,7 +520,8 @@ namespace SIPSorcery.SIP.App
 
             SIPHeader inviteHeader = new SIPHeader(sipCallDescriptor.GetFromHeader(), SIPToHeader.ParseToHeader(sipCallDescriptor.To), 1, callId);
 
-            inviteHeader.From.FromTag = CallProperties.CreateNewTag();
+            // added ?? streamworks
+            inviteHeader.From.FromTag ??= CallProperties.CreateNewTag();
 
             inviteHeader.Contact = new List<SIPContactHeader>() { SIPContactHeader.GetDefaultSIPContactHeader(inviteRequest.URI.Scheme) };
             inviteHeader.Contact[0].ContactURI.User = sipCallDescriptor.Username;
